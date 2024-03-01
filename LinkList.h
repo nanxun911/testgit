@@ -21,10 +21,27 @@ typedef struct LinkList{
     struct LinkList* next;
 }LinkList;
 LinkList *CreatList();
+LinkList * ReadLinkList();
 void Print(LinkList *head);
 int FindId(char id[],LinkList *head);
 int FindCheck(LinkList *head,LinkList *p);
-void WriteLinkList(LinkList *head);
-LinkList * ReadLinkList();
+void WriteLinkList(LinkList* head);
+void AddNewStudent();
+int SearchStudent(char* id);
+int SearchStudentName(char* name);
+int SearchStudentDrom(char* drom);
+int DeleteStudent(char* id);
+int ModifyStudent(char* id);
+void SortNodeById(LinkList* head);
+void initInterface();
+void SortNodeByIdDown(LinkList* head);
+void SelectMenu();
+void interface1();
+void SonOperation(LinkList *head);
+void StatisticalTotal(LinkList *head);
+void StatisticalDorm(LinkList *head);
+void StatisticalDormNum(LinkList *head);
+void StatisticalOperation(LinkList *head);
+void SonStatistical();
 #endif //DROM_LINKLIST_H
 

@@ -16,5 +16,4 @@ typedef struct account{ //
 }account;
 int EntryCheck(char* id, char* password);
 int Login(char* studentId, char* studentPassword);
-
 #endif //DROM_ACCOUNT_H

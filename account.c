@@ -5,27 +5,12 @@
 int EntryCheck(char* id, char* password) { //登录校验的函数
     char adminerId[IDLENGTH] = {"100000"};
     char adminerPassword[PASSWORDLENGTH] = {"11111"};
-    FILE* fp = fopen("E:\\dromAccount.txt","rb");
-    int tmp = 0;
-    if (fp == NULL) {
-        perror("file error");
-        exit(-1);
-    }
     if (strcmp(id,adminerId) == 0 && strcmp(password, adminerPassword) == 0) {
         return 1;
     }
     else {
-        account user;
-        while (!feof(fp)) {
-            tmp = fread(&user, sizeof(account), 1, fp);
-            if (tmp > 0 && strcmp(id,user.username) == 0 && strcmp(password, user.password) == 0 ){
-                fclose(fp);
-                return 2;
-            }
-        }
-        fclose(fp);
+        return 0;
     }
-    return 3;
 }
 int Login(char* studentId, char* studentPassword){
     char ch;
@@ -69,19 +54,4 @@ int Login(char* studentId, char* studentPassword){
         studentPassword[i] = '\0';
     }
     return EntryCheck(studentId,studentPassword);
-}
-void interface()//主界面
-{
-    printf("\n\n");
-    printf("\t---------------------------------------------------------\n");
-    printf("\t|\t\t欢迎使用宿舍信息管理系统\t\t|\n");
-    printf("\t---------------------------------------------------------\n");
-    printf("\t|\t\t\t1-录入数据\t\t\t|\n");
-    printf("\t|\t\t\t2-数据增加\t\t\t|\n");
-    printf("\t|\t\t\t3-数据删除\t\t\t|\n");
-    printf("\t|\t\t\t4-数据修改\t\t\t|\n");
-    printf("\t|\t\t\t5-数据查询\t\t\t|\n");
-    printf("\t|\t\t\t6-数据统计\t\t\t|\n");
-    printf("\t|\t\t\t7-数据报表\t\t\t|\n");
-    printf("\t---------------------------------------------------------\n");
 }

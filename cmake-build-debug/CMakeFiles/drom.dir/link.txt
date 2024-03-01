@@ -1,0 +1,3 @@
+"E:\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\drom.dir/objects.a
+C:\x86_64-8.1.0-release-win32-seh-rt_v6-rev0\mingw64\bin\ar.exe qc CMakeFiles\drom.dir/objects.a @CMakeFiles\drom.dir\objects1.rsp
+C:\x86_64-8.1.0-release-win32-seh-rt_v6-rev0\mingw64\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\drom.dir/objects.a -Wl,--no-whole-archive -o drom.exe -Wl,--out-implib,libdrom.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\drom.dir\linkLibs.rsp

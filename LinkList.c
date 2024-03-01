@@ -12,7 +12,8 @@ LinkList * CreatList()//´´½¨Á´±í
     end=head;
     printf("\tÊäÈëÑ§ºÅ:");
     fflush(stdin);
-    gets(id);
+    scanf("%s", id);
+    getchar();
     while(strlen(id)>0){
         if(FindId(id,head)){//Ñ§ºÅ²éÖØ,ÖØ¸´·µ»Ø0£¬·ñÔò1
             p=(LinkList *)malloc(sizeof(LinkList ));
@@ -64,6 +65,10 @@ void Print(LinkList *head){//Á´±í´òÓ¡Êä³ö
 }
 LinkList * ReadLinkList(){//¶ÁÈ¡ÎÄ¼þ
     FILE* fp;
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
     int tmp = 0;
     fp=fopen("E:\\drom.txt","rb+");
     LinkList* i;
@@ -100,9 +105,519 @@ int FindCheck(LinkList *head,LinkList *p) {//¼ì²éËÞÉáÊÇ·ñÂúÔ±,·ûºÏ·µ»Ø1£¬²»·ûºÏ·
 void WriteLinkList(LinkList *head){  //ÓÃÁ´±í£¬Éú³ÉÎÄ¼þ
     FILE *fp;
     fp=fopen("E:\\drom.txt","wb");
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
     LinkList *i;
     for(i = head->next; i != NULL; i = i->next){
         fwrite(&(i->student1), sizeof(student) , 1, fp);
     }
     fclose(fp);
+}
+void SortNodeById(LinkList* head) {
+    LinkList *pb, *pf, temp;
+    pf = head;
+    if(head == NULL) {//Á´±íÎª¿Õ
+            printf("needn't order.\n");
+            return ;
+    }
+    if(head->next == NULL) {//Á´±íÓÐ1¸ö½Úµã
+            printf("only one print, needn't order.\n");
+            return ;
+    }
+    while(pf->next != NULL) {//ÒÔpfÖ¸ÏòµÄ½ÚµãÎª»ù×¼½Úµã
+        pb = pf->next;//pb´Ó»ù×¼µãµÄÏÂÒ»¸ö½Úµã¿ªÊ¼
+        while(pb != NULL) {
+            if(strcmp(pf->student1.id , pb->student1.id) > 0) {
+                temp = *pf;
+                *pf = *pb;
+                *pb = temp;
+                temp.next = pf->next;
+                pf->next = pb->next;
+                pb->next = temp.next;
+            }
+            pb = pb->next;
+        }
+        pf = pf->next;
+    }
+}
+void SortNodeByIdDown(LinkList* head) {
+    LinkList *pb, *pf, temp;
+    pf = head;
+    if(head == NULL) {//Á´±íÎª¿Õ
+        printf("needn't order.\n");
+        return ;
+    }
+    if(head->next == NULL) {//Á´±íÓÐ1¸ö½Úµã
+        printf("only one print, needn't order.\n");
+        return ;
+    }
+    while(pf->next != NULL) {//ÒÔpfÖ¸ÏòµÄ½ÚµãÎª»ù×¼½Úµã
+        pb = pf->next;//pb´Ó»ù×¼µãµÄÏÂÒ»¸ö½Úµã¿ªÊ¼
+        while(pb != NULL) {
+            if(strcmp(pf->student1.id , pb->student1.id) < 0) {
+                temp = *pf;
+                *pf = *pb;
+                *pb = temp;
+                temp.next = pf->next;
+                pf->next = pb->next;
+                pb->next = temp.next;
+            }
+            pb = pb->next;
+        }
+        pf = pf->next;
+    }
+}
+void AddNewStudent() {
+    FILE *fp;
+    fp=fopen("E:\\drom.txt","rb+");
+    int flag = 0 ;
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    char id[23];
+    student stu2, stu3;
+    printf("\tÊäÈëÑ§ºÅ:");
+    fflush(stdin);
+    scanf("%s", id);
+    getchar();
+    strcpy(stu3.id,id);
+    printf("\tÊäÈëÐÕÃû:");
+    gets(stu3.name);
+    printf("\tÊäÈë¹«Ô¢Ãû³Æ:");
+    scanf("%s",stu3.dorm);
+    printf("\tÊäÈëËÞÉáÃû³Æ:");
+    scanf("%d",&(stu3.dormNum));
+    printf("\tÊäÈë´²Î»ºÅ:");
+    scanf("%d",&(stu3.dormNumId));
+    printf("\tÊÖ»úºÅ:");
+    fflush(stdin);
+    gets(stu3.number);
+    printf("\tÄêÁä:");
+    scanf("%d",&(stu3.age));
+    printf("\tÐÔ±ð:");
+    scanf("%s",stu3.sex);
+    printf("\t×¨Òµ°à¼¶:");
+    scanf("%s",stu3.major);
+    while (fread(&stu2,sizeof(stu2), 1, fp)) {
+        if (strcmp(id, stu2.id) == 0) {
+            flag = 1;
+        }
+    }
+    if (flag == 1 ) {
+        printf("Ñ§ºÅÒÑ´æÔÚ");
+    } else {
+        fwrite(&stu3, sizeof(stu3), 1, fp);
+        printf("Ôö¼Ó³É¹¦");
+        fclose(fp);
+    }
+}
+int DeleteStudent(char* id){
+    FILE *fp;
+    fp=fopen("E:\\drom.txt","rb+");
+    FILE* fp1 = fopen("E:\\coke.txt","wb+");
+    int flag = 0 ;
+    if (fp == NULL || fp1 == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    student stu2, stu3;
+    while (fread(&stu2,sizeof(stu2), 1, fp)) {
+        if (strcmp(id, stu2.id) != 0) {
+            fwrite(&stu2, sizeof(student), 1, fp1);
+        }
+        else {
+            flag = 1;
+        }
+    }
+    fclose(fp);
+    fclose(fp1);
+    fp1 = fopen("E:\\coke.txt","rb+");
+    fp = fopen("E:\\drom.txt","wb+");
+    while (fread(&stu2,sizeof(stu2), 1, fp1)) {
+        if (strcmp(id, stu2.id) != 0) {
+            fwrite(&stu2, sizeof(student), 1, fp);
+        }
+    }
+    fclose(fp);
+    fclose(fp1);
+    if (flag == 1) {
+        printf("É¾³ýÑ§Éú³É¹¦\n");
+        return 1;
+    }
+    else {
+        printf("¸ÃÑ§ÉúÑ§ºÅ²»´æÔÚ\n");
+        return 0;
+    }
+}
+int SearchStudent(char* id) {
+    FILE* fp = fopen("E:\\drom.txt","rb+");
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    int flag = 0;
+    student student1;
+    while (fread(&student1, sizeof(student1), 1, fp) > 0){
+        if (strcmp(id, student1.id) == 0) {
+            flag = 1;
+            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+        }
+    }
+    if (flag == 0) {
+        printf("Î´²éÑ¯µ½¸ÃÑ§ÉúÐÅÏ¢");
+    }
+}
+int SearchStudentName(char* name) {
+    FILE* fp = fopen("E:\\drom.txt","rb+");
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    int flag = 0;
+    student student1;
+    while (fread(&student1, sizeof(student1), 1, fp)){
+        if (strcmp(name, student1.name) == 0) {
+            flag = 1;
+            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+        }
+    }
+    if (flag == 0) {
+        printf("Î´²éÑ¯µ½¸ÃÑ§ÉúÐÅÏ¢");
+    }
+}
+int SearchStudentDrom(char* drom) {
+    FILE* fp = fopen("E:\\drom.txt","rb+");
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    int flag = 0;
+    student student1;
+    while (fread(&student1, sizeof(student1), 1, fp)){
+        if (strcmp(drom, student1.dorm) == 0) {
+            flag = 1;
+            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+        }
+    }
+    if (flag == 0) {
+        printf("Î´²éÑ¯µ½¸ÃÑ§ÉúÐÅÏ¢");
+    }
+}
+int ModifyStudent(char* id) {
+    FILE* fp = fopen("E:\\drom.txt","rb+");
+    if (fp == NULL) {
+        perror("file error");
+        exit(-1);
+    }
+    char studentId[20];
+    int numId = 0;
+    student student1;
+    while (fread(&student1, sizeof(student1), 1, fp) > 0){
+        if (strcmp(id, student1.id) == 0) {
+            printf("ÇëÊäÈëÄãÒªÐÞ¸ÄµÄÄÚÈÝ\n");
+            printf("1. ÐÞ¸ÄÑ§ºÅ 2. ÐÞ¸Ä¹«Ô¢ 3. ÐÞ¸Ä´²ºÅ 4. ÐÞ¸ÄËÞÉáºÅ\n");
+            switch(getchar()) {
+                case '1':
+                    printf("ÇëÊäÈëÄãÒªÐÞ¸ÄµÄÑ§ºÅ");
+                    scanf("%s", studentId);
+                    strcpy(student1.id, studentId);
+                    break;
+                case '2':
+                    printf("ÇëÊäÈëÄãÒªÐÞ¸ÄµÄ¹«Ô¢");
+                    scanf("%s", studentId);
+                    strcpy(student1.id, studentId);
+                    break;
+                case '3':
+                    printf("ÇëÊäÈëÄãÒªÐÞ¸ÄµÄ´²ºÅ");
+                    scanf("%d", &numId);
+                    break;
+                case '4':
+                    printf("ÇëÊäÈëÄãÒªÐÞ¸ÄµÄËÞÉáºÅ");
+                    scanf("%d", &numId);
+                    break;
+                default:
+                    break;
+            }
+            getchar();
+            fseek(fp, -sizeof(student1), SEEK_CUR);
+            fwrite(&student1, sizeof(student1), 1 , fp);
+            printf("ÐÞ¸Ä³É¹¦\n");
+        }
+    }
+}
+void interface1() {
+
+        printf("\t\t------------------\n");
+        printf("\t\t|1.°´Ñ§ºÅ²éÑ¯    |\n");
+        printf("\t\t|2.°´ÐÕÃû²éÑ¯    |\n");
+        printf("\t\t|3.°´¹«Ô¢ËÞÉá²éÑ¯|\n");
+        printf("\t\t------------------\n");
+}
+void initInterface() {
+    printf("\n\n");
+    printf("\t---------------------------------------------------------\n");
+    printf("\t|\t\t»¶Ó­Ê¹ÓÃËÞÉáÐÅÏ¢¹ÜÀíÏµÍ³\t\t|\n");
+    printf("\t---------------------------------------------------------\n");
+    printf("\t|\t\t\t1-Â¼ÈëÊý¾Ý\t\t\t|\n");
+    printf("\t|\t\t\t2-Êý¾ÝÔö¼Ó\t\t\t|\n");
+    printf("\t|\t\t\t3-Êý¾ÝÉ¾³ý\t\t\t|\n");
+    printf("\t|\t\t\t4-Êý¾ÝÐÞ¸Ä\t\t\t|\n");
+    printf("\t|\t\t\t5-Êý¾Ý²éÑ¯\t\t\t|\n");
+    printf("\t|\t\t\t6-Êý¾ÝÍ³¼Æ\t\t\t|\n");
+    printf("\t|\t\t\t7-Êý¾Ý±¨±í\t\t\t|\n");
+    printf("\t|\t\t\t8-ÍË³öÏµÍ³\t\t\t|\n");
+    printf("\t---------------------------------------------------------\n");
+}
+void SelectMenu() {
+    int choice;
+    int status;
+    int flag = 1;
+    char id[20];
+    while (flag) {
+        int tmp = 1;
+        initInterface();
+        LinkList *head;
+        head = ReadLinkList();
+        printf("\tÊäÈë1~7£º");
+        scanf("%d", &choice);
+        getchar();
+        switch (choice) {
+            case 1://Â¼ÈëÐÅÏ¢
+                system("cls");
+                status = 1;
+                while (status) {
+                    head = CreatList();//´´½¨Á´±í
+                    WriteLinkList(head);//Ð´ÈëÎÄ¼þ
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 2://Ôö¼Ó
+                system("cls");
+                status = 1;
+                while (status) {
+                    AddNewStudent();
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 3://°´Ñ§ºÅÉ¾³ý
+                system("cls");
+                status = 1;
+                while (status) {
+                    printf("ÊäÈëÄãÒªÉ¾³ýµÄÑ§ºÅ");
+                    gets(id);
+                    DeleteStudent(id);
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 4://¸Ä°´Ñ§ºÅ
+                system("cls");
+                status = 1;
+                while (status) {
+                    printf("ÊäÈëÄãÒªÐÞ¸ÄµÄÑ§ÉúµÄÑ§ºÅ");
+                    scanf("%s", id);
+                    getchar();
+                    ModifyStudent(id);
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 5://²é£¬°´ÐÕÃû£¬ËÞÉá£¬Ñ§ºÅ
+                system("cls");//×ÓÄ¿Â¼
+                status = 1;
+                while (status) {
+                    SonOperation(head);
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 6: //Í³¼Æ£¬×ÜÈËÊý£¬Ã¿¸öËÞÉáÈËÊý£¬Ò»¸öÂ¥ÈËÊý
+                system("cls");//×ÓÄ¿Â¼
+                status = 1;
+                while (status) {
+                    StatisticalOperation(head);
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 7://±¨±í
+                system("cls");
+                status = 1;
+                while (status) {
+                    while (tmp) {
+                        printf("ÇëÊäÈëÄãÊä³öµÄ·½Ê½\n");
+                        printf("ÇåÑ¡ÔñÄãÒªÊä³öµÄË³Ðò\n1. ÉýÐò 2. ½µÐò\n");
+                        switch (getchar()) {
+                            case '1':
+                                SortNodeById(head);
+                                tmp = 0;
+                                system("cls");
+                                break;
+                            case '2':
+                                SortNodeByIdDown(head);
+                                system("cls");
+                                tmp = 0;
+                                break;
+                            default:
+                                printf("ÇëÖØÐÂÊäÈë");
+                                tmp = 1;
+                                break;
+                        }
+                    }
+                    printf("\t---------------------------------------------------------------------------------\n");
+                    Print(head);
+                    printf("\t---------------------------------------------------------------------------------\n");
+                    printf("\n");
+                    printf("ÊäÈë0·µ»ØÉÏÒ»²ã\n");
+                    scanf("%d", &status);
+                }
+                system("cls");
+                break;
+            case 8:
+                flag = 0;
+            default :
+                system("cls");
+                printf("\t->ÊäÈëÓÐÎó,ÖØÐÂÊäÈë<-\n");
+                break;
+        }
+    }
+
+}
+void SonOperation(LinkList *head){//²éÑ¯²Ù×÷Ñ¡Ïî±í
+    interface1();
+    printf("\tÊäÈëÑ¡Ïî(0ÍË³ö):");
+    int choice;
+    scanf("%d",&choice);
+    getchar();
+    if(choice == 0){
+        return;
+    }
+    switch(choice){
+        case 1:{
+            char id[23];
+            printf("ÇëÊäÈëÄãµÄÕËºÅ");
+            scanf("%s", id);
+            SearchStudent(id);//°´id²éÑ¯
+            break;
+        }
+        case 2:{
+            char name[23];
+            printf("ÇëÊäÈëÄãµÄÐÕÃû");
+            scanf("%s", name);
+            SearchStudentName(name);
+            //°´ÐÕÃû²éÑ¯
+            break;
+        }
+        case 3:{
+            char drom[23];
+            printf("ÇëÊäÈëÄãµÄËÞÉáºÅ");
+            scanf("%s", drom);
+            SearchStudentDrom(drom);//°´¹«Ô¢ËÞÉá²éÑ¯
+            break;
+        }
+        default :{
+            printf("\t->ÊäÈë¸ñÊ½ÓÐÎó<-\n");
+            break;
+        }
+    }
+}
+void  StatisticalTotal(LinkList *head){//Í³¼Æ×ÜÈËÊý
+    LinkList *i;
+    int n = 0;
+    for(i = head->next;i != NULL;i = i->next) {
+        n++;
+    }
+    printf("\t->¹²%dÈË<-\n",n);
+}
+void StatisticalDorm(LinkList *head)//Í³¼Æµ¥¸ö¹«Ô¢
+{
+    int n=0;
+    char dorm[20];
+    printf("\tÊäÈë¹«Ô¢:");
+    scanf("%s", dorm);
+    getchar();
+    LinkList *i;
+    i=head;
+    n=0;
+    while((i=i->next)!=NULL){
+        if(strcmp(dorm,i->student1.dorm)==0){
+            n++;
+        }
+    }
+    printf("\t->¸Ã¹«Ô¢¹²%dÈË<-\n",n);
+}
+void StatisticalDormNum(LinkList *head)//Í³¼Æ¹«Ô¢ËÞÉá
+{
+    int  num=0;
+    int n;
+    char dorm[20];
+    printf("\tÊäÈë¹«Ô¢ºÍËÞÉáºÅ:");
+    scanf("%s %d",dorm, &num);
+    getchar();
+    LinkList *i;
+    n=0;
+    i=head;
+    while((i = i->next)!=NULL){
+        if(num == (i->student1.dormNumId)&&strcmp(dorm, i->student1.dorm)==0){
+            n++;
+        }
+    }
+    printf("\t->¸ÃËÞÉá¹¤%dÈË<-\n",n);
+    num=0;
+}
+void StatisticalOperation(LinkList *head) //Í³¼Æ²Ù×÷Ñ¡Ïî±í
+{
+    SonStatistical();
+    printf("\tÊäÈëÑ¡Ïî(0ÍË³ö):");
+    int choice;
+    scanf("%d",&choice);
+    getchar();
+    if(choice==0)
+    {
+        return;
+    }
+    switch(choice)
+    {
+        case 1:{
+            StatisticalTotal(head);//Í³¼Æ×ÜÈËÊý
+            break;
+        }
+        case 2:{
+            StatisticalDorm(head);//Í³¼Æµ¥¸ö¹«Ô¢
+            break;
+        }
+        case 3:{
+            StatisticalDormNum(head);//Í³¼Æ¹«Ô¢ËÞÉá
+            break;
+        }
+        default :{
+            printf("\t->ÊäÈë¸ñÊ½ÓÐÎó<-\n");
+            break;
+        }
+    }
+}
+void SonStatistical()//Í³¼Æ²Ù×÷±í×ÓÄ¿Â¼
+{
+    printf("\t\t----------------\n");
+    printf("\t\t|1.Í³¼Æ×ÜÈËÊý  |\n");
+    printf("\t\t|2.Í³¼Æµ¥¸ö¹«Ô¢|\n");
+    printf("\t\t|3.Í³¼Æ¹«Ô¢ËÞÉá|\n");
+    printf("\t\t----------------\n");
 }
