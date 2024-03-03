@@ -14,9 +14,9 @@ int main() {
             system("cls");
             SelectMenu();
         default:
-            printf("ç™»é™†å¤±è´¥\n");
+            printf("\nµÇÂ½Ê§°Ü\n");
             status--;
-            printf("è¿˜æœ‰%dæ¬¡æœºä¼š\n", status);
+            printf("»¹ÓÐ%d´Î»ú»á\n", status);
     }
 }
     system("Pause");

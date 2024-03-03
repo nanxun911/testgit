@@ -29,7 +29,7 @@ void WriteLinkList(LinkList* head);
 void AddNewStudent();
 int SearchStudent(char* id);
 int SearchStudentName(char* name);
-int SearchStudentDrom(char* drom);
+int SearchStudentDrom(char* drom, int num);
 int DeleteStudent(char* id);
 int ModifyStudent(char* id);
 void SortNodeById(LinkList* head);

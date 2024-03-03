@@ -288,7 +288,7 @@ int SearchStudentName(char* name) {
         printf("未查询到该学生信息");
     }
 }
-int SearchStudentDrom(char* drom) {
+int SearchStudentDrom(char* drom , int num) {
     FILE* fp = fopen("E:\\drom.txt","rb+");
     if (fp == NULL) {
         perror("file error");
@@ -297,7 +297,7 @@ int SearchStudentDrom(char* drom) {
     int flag = 0;
     student student1;
     while (fread(&student1, sizeof(student1), 1, fp)){
-        if (strcmp(drom, student1.dorm) == 0) {
+        if (strcmp(drom, student1.dorm) == 0 && num == student1.dormNum) {
             flag = 1;
             printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
         }
@@ -307,47 +307,62 @@ int SearchStudentDrom(char* drom) {
     }
 }
 int ModifyStudent(char* id) {
-    FILE* fp = fopen("E:\\drom.txt","rb+");
+    FILE* fp = fopen("E:\\drom.txt", "rb+");
     if (fp == NULL) {
         perror("file error");
         exit(-1);
     }
-    char studentId[20];
-    int numId = 0;
+
     student student1;
-    while (fread(&student1, sizeof(student1), 1, fp) > 0){
+    int found = 0;
+    while (fread(&student1, sizeof(student1), 1, fp) > 0) {
         if (strcmp(id, student1.id) == 0) {
+            found = 1;
             printf("请输入你要修改的内容\n");
-            printf("1. 修改学号 2. 修改公寓 3. 修改床号 4. 修改宿舍号\n");
-            switch(getchar()) {
-                case '1':
-                    printf("请输入你要修改的学号");
-                    scanf("%s", studentId);
-                    strcpy(student1.id, studentId);
+            printf("1. 修改学号\n2. 修改公寓\n3. 修改床号\n4. 修改宿舍号\n");
+            int choice;
+            scanf("%d", &choice);
+
+            switch (choice) {
+                case 1:
+                    printf("请输入新的学号: ");
+                    scanf("%s", student1.id);
                     break;
-                case '2':
-                    printf("请输入你要修改的公寓");
-                    scanf("%s", studentId);
-                    strcpy(student1.id, studentId);
+                case 2:
+                    printf("请输入新的公寓: ");
+                    scanf("%s", student1.dorm);
                     break;
-                case '3':
-                    printf("请输入你要修改的床号");
-                    scanf("%d", &numId);
+                case 3:
+                    printf("请输入新的床号: ");
+                    scanf("%d", &(student1.dormNumId));
                     break;
-                case '4':
-                    printf("请输入你要修改的宿舍号");
-                    scanf("%d", &numId);
+                case 4:
+                    printf("请输入新的宿舍号: ");
+                    scanf("%d", &(student1.dormNum));
                     break;
                 default:
+                    printf("无效的选项\n");
                     break;
             }
-            getchar();
+
+            // 将文件指针定位到当前学生信息的位置
             fseek(fp, -sizeof(student1), SEEK_CUR);
-            fwrite(&student1, sizeof(student1), 1 , fp);
+            // 将修改后的学生信息写回文件
+            fwrite(&student1, sizeof(student1), 1, fp);
+
             printf("修改成功\n");
+            break; // 找到并修改了学生信息，跳出循环
         }
     }
+
+    if (!found) {
+        printf("未找到学生信息\n");
+    }
+
+    fclose(fp);
+    return found;
 }
+
 void interface1() {
 
         printf("\t\t------------------\n");
@@ -527,9 +542,11 @@ void SonOperation(LinkList *head){//查询操作选项表
         }
         case 3:{
             char drom[23];
-            printf("请输入你的宿舍号");
-            scanf("%s", drom);
-            SearchStudentDrom(drom);//按公寓宿舍查询
+            int num;
+            printf("请输入你的公寓和宿舍号");
+            scanf("%s %d",drom, &num);
+            getchar();
+            SearchStudentDrom(drom, num);//按公寓宿舍查询
             break;
         }
         default :{
@@ -575,7 +592,7 @@ void StatisticalDormNum(LinkList *head)//统计公寓宿舍
     n=0;
     i=head;
     while((i = i->next)!=NULL){
-        if(num == (i->student1.dormNumId)&&strcmp(dorm, i->student1.dorm)==0){
+        if(num == (i->student1.dormNum)&&strcmp(dorm, i->student1.dorm)==0){
             n++;
         }
     }
