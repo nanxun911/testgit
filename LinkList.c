@@ -59,8 +59,17 @@ int FindId(char id[],LinkList *head){//学号查重,重复返回0，否则1
 }
 void Print(LinkList *head){//链表打印输出
     LinkList *i;
+    int chas = 0;
     for(i = head->next; i != NULL; i = i->next){
-        printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",i->student1.id,i->student1.name,i->student1.major,i->student1.dorm,i->student1.dormNum,i->student1.dormNumId,i->student1.sex,i->student1.age,i->student1.number);
+        if (chas == 0) {
+            printf("| %-10s | %-8s | %-9s | %-10s | %-7s | %-9s | %-5s | %-4s | %-12s |\n",
+                   "ID", "Name", "Major", "Dorm", "DormNum", "DormNumId", "Sex", "Age", "Number");
+            chas = 1;
+            printf("----------------------------------------------------------------------------------\n");
+        }
+        printf("| %-10s | %-8s | %-9s | %-10s | %-7d | %-9d | %-5s | %-4d | %-12s |\n",
+               i->student1.id, i->student1.name, i->student1.major, i->student1.dorm, i->student1.dormNum,
+               i->student1.dormNumId, i->student1.sex, i->student1.age, i->student1.number);
     }
 }
 LinkList * ReadLinkList(){//读取文件
@@ -115,16 +124,17 @@ void WriteLinkList(LinkList *head){  //用链表，生成文件
     }
     fclose(fp);
 }
+
 void SortNodeById(LinkList* head) {
     LinkList *pb, *pf, temp;
     pf = head;
     if(head == NULL) {//链表为空
-            printf("needn't order.\n");
-            return ;
+        printf("needn't order.\n");
+        return ;
     }
     if(head->next == NULL) {//链表有1个节点
-            printf("only one print, needn't order.\n");
-            return ;
+        printf("only one print, needn't order.\n");
+        return ;
     }
     while(pf->next != NULL) {//以pf指向的节点为基准节点
         pb = pf->next;//pb从基准点的下一个节点开始
@@ -259,11 +269,20 @@ int SearchStudent(char* id) {
         exit(-1);
     }
     int flag = 0;
+    int chas = 0;
     student student1;
     while (fread(&student1, sizeof(student1), 1, fp) > 0){
         if (strcmp(id, student1.id) == 0) {
             flag = 1;
-            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+            if (chas == 0) {
+                printf("| %-10s | %-8s | %-9s | %-10s | %-7s | %-9s | %-5s | %-4s | %-12s |\n",
+                       "ID", "Name", "Major", "Dorm", "DormNum", "DormNumId", "Sex", "Age", "Number");
+                chas = 1;
+                printf("----------------------------------------------------------------------------------\n");
+            }
+            printf("| %-10s | %-8s | %-9s | %-10s | %-7d | %-9d | %-5s | %-4d | %-12s |\n",
+                   student1.id, student1.name, student1.major, student1.dorm, student1.dormNum,
+                   student1.dormNumId, student1.sex, student1.age, student1.number);
         }
     }
     if (flag == 0) {
@@ -277,11 +296,20 @@ int SearchStudentName(char* name) {
         exit(-1);
     }
     int flag = 0;
+    int chas = 0;
     student student1;
     while (fread(&student1, sizeof(student1), 1, fp)){
         if (strcmp(name, student1.name) == 0) {
             flag = 1;
-            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+            if (chas == 0) {
+                printf("| %-10s | %-8s | %-9s | %-10s | %-7s | %-9s | %-5s | %-4s | %-12s |\n",
+                       "ID", "Name", "Major", "Dorm", "DormNum", "DormNumId", "Sex", "Age", "Number");
+                chas = 1;
+                printf("----------------------------------------------------------------------------------\n");
+            }
+            printf("| %-10s | %-8s | %-9s | %-10s | %-7d | %-9d | %-5s | %-4d | %-12s |\n",
+                   student1.id, student1.name, student1.major, student1.dorm, student1.dormNum,
+                   student1.dormNumId, student1.sex, student1.age, student1.number);
         }
     }
     if (flag == 0) {
@@ -295,11 +323,20 @@ int SearchStudentDrom(char* drom , int num) {
         exit(-1);
     }
     int flag = 0;
+    int chas = 0;
     student student1;
     while (fread(&student1, sizeof(student1), 1, fp)){
         if (strcmp(drom, student1.dorm) == 0 && num == student1.dormNum) {
             flag = 1;
-            printf("\t|%-10s%-8s%-9s%-10s%-5d%-5d%-5s%-5d%-12s|\n",student1.id,student1.name,student1.major,student1.dorm,student1.dormNum,student1.dormNumId,student1.sex,student1.age,student1.number);
+            if (chas == 0) {
+                printf("| %-10s | %-8s | %-9s | %-10s | %-7s | %-9s | %-5s | %-4s | %-12s |\n",
+                       "ID", "Name", "Major", "Dorm", "DormNum", "DormNumId", "Sex", "Age", "Number");
+                printf("----------------------------------------------------------------------------------\n");
+                chas = 1;
+            }
+            printf("| %-10s | %-8s | %-9s | %-10s | %-5d | %-5d | %-5s | %-5d | %-12s |\n",
+                   student1.id, student1.name, student1.major, student1.dorm, student1.dormNum,
+                   student1.dormNumId, student1.sex, student1.age, student1.number);
         }
     }
     if (flag == 0) {
@@ -386,7 +423,7 @@ void initInterface() {
     printf("\t|\t\t\t8-退出系统\t\t\t|\n");
     printf("\t---------------------------------------------------------\n");
 }
-void SelectMenu() {
+int SelectMenu() {
     int choice;
     int status;
     int flag = 1;
@@ -513,7 +550,7 @@ void SelectMenu() {
                 break;
         }
     }
-
+    return 0;
 }
 void SonOperation(LinkList *head){//查询操作选项表
     interface1();

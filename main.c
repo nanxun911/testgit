@@ -9,10 +9,11 @@ int main() {
     char password[20];
     int status = 3;
     while(status) {
-    switch (Login(studentId, password)) {
+    switch (Login(studentId, password) && status) {
         case 1:
             system("cls");
-            SelectMenu();
+            status = SelectMenu();
+            break;
         default:
             printf("\nµÇÂ½Ê§°Ü\n");
             status--;

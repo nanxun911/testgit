@@ -35,7 +35,7 @@ int ModifyStudent(char* id);
 void SortNodeById(LinkList* head);
 void initInterface();
 void SortNodeByIdDown(LinkList* head);
-void SelectMenu();
+int SelectMenu();
 void interface1();
 void SonOperation(LinkList *head);
 void StatisticalTotal(LinkList *head);
