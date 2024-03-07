@@ -670,8 +670,6 @@ void StatisticalOperation(LinkList *head) //统计操作选项表
 void SonStatistical()//统计操作表子目录
 {
     printf("\t\t----------------\n");
-    printf("\t\t----------------\n");
-    printf("\t\t----------------\n");
     printf("\t\t|1.统计总人数  |\n");
     printf("\t\t|2.统计单个公寓|\n");
     printf("\t\t|3.统计公寓宿舍|\n");
